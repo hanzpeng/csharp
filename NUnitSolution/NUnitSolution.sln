@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnit-0004-MedianTwoSortedArrays", "NUnitTestProject1\NUnit-0004-MedianTwoSortedArrays.csproj", "{0424157F-7F87-44C4-91E8-0E8614BD683B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnitProject1", "NUnitTestProject1\NUnitProject1.csproj", "{0424157F-7F87-44C4-91E8-0E8614BD683B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
