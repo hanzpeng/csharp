@@ -57,6 +57,9 @@ namespace P494_TargetSum
                 sumWays = sumWaysNew;
             }
             return sumWays[target];
+
+            // Space Complexity: O(2*SumRange)   -> O(2*SumRange)
+            // Time  Complexity: O(2*SumRange*N) -> O(SumRange*N)
         }
         public int WaysByRecurssion(int[] nums, int target)
         {
@@ -86,6 +89,12 @@ namespace P494_TargetSum
 
             waysToTargetsAtIndex[index][target] = ways;
             return ways;
+
+            //Space Complexity: O(SumRange*N)
+            //Time  Complexity: O(SumRange*N) : each N array Dictionary with key in SumRange, each item is filled only at most once.
+
+            // without Memoization, the time complexity is O(2^N)
+
         }
     }
 }
