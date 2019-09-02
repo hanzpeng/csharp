@@ -29,9 +29,11 @@ namespace Hanz001_target_number
         {
             Assert.AreEqual(4, WaysByBuilder(new int[] { -3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, WaysByBuilder(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, WaysByBuilder(new int[] { -3, 1, 3, 5, 7 }, target: 6));
 
             Assert.AreEqual(4, WaysByRecurssion(new int[] { -3, 1, 3, 5 }, target: 6));
-            Assert.AreEqual(4, WaysByRecurssion(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, WaysByRecurssion(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, WaysByRecurssion(new int[] { -3, 1, 3, 5, 7 }, target: 6));
 
         }
         public int WaysByBuilder(int[] nums, int target)
