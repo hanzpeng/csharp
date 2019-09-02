@@ -27,10 +27,14 @@ namespace Hanz001_target_number
         [Test]
         public void Test1()
         {
-            Assert.AreEqual(4, Ways(new int[] { -3, 1, 3, 5 }, 6));
-            Assert.AreEqual(4, Ways(new int[] { 1, 2, 3, 4 }, 5));
+            Assert.AreEqual(4, WaysByBuilder(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, WaysByBuilder(new int[] { 1, 2, 3, 4 }, target: 5));
+
+            Assert.AreEqual(4, WaysByRecurssion(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, WaysByRecurssion(new int[] { -3, 1, 3, 5 }, target: 6));
+
         }
-        public int Ways(int[] nums, int target)
+        public int WaysByBuilder(int[] nums, int target)
         {
             Dictionary<int, int> sumWays = new Dictionary<int, int>();
             sumWays[0] = 1;
@@ -52,6 +56,37 @@ namespace Hanz001_target_number
                 }
             }
             return sumWays[target];
+        }
+        public int WaysByRecurssion(int[] nums, int target)
+        {
+            int lastIndex = nums.Length - 1;
+            Dictionary<int, int>[] waysForTargetsAtIndex = new Dictionary<int, int>[nums.Length];
+            for (int i = 0; i < nums.Length; i++)
+            {
+                waysForTargetsAtIndex[i] = new Dictionary<int, int>();
+            }
+            return WaysByRecurssionHelper(nums, target, lastIndex, waysForTargetsAtIndex);
+        }
+        public int WaysByRecurssionHelper(int[] nums, int target, int lastIndex, Dictionary<int, int>[] waysToTargetsAtIndex)
+        {
+            if (lastIndex == -1)
+            {
+                if (target == 0) return 1;
+                else return 0;
+            }
+
+            if (waysToTargetsAtIndex[lastIndex].ContainsKey(target))
+            {
+                return waysToTargetsAtIndex[lastIndex][target];
+            }
+
+            int ways =
+                WaysByRecurssionHelper(nums, target + nums[lastIndex], lastIndex - 1, waysToTargetsAtIndex) +
+                WaysByRecurssionHelper(nums, target - nums[lastIndex], lastIndex - 1, waysToTargetsAtIndex) +
+                WaysByRecurssionHelper(nums, target, lastIndex - 1, waysToTargetsAtIndex);
+
+            waysToTargetsAtIndex[lastIndex][target] = ways;
+            return ways;
         }
     }
 }
