@@ -41,6 +41,7 @@ namespace P494_TargetSum
         }
         public int WaysByBuilder(int[] nums, int target)
         {
+            // number of ways to get to target, key=target, val= number of ways
             Dictionary<int, int> sumWays = new Dictionary<int, int>();
             sumWays[0] = 1;
             for (int i = 0; i < nums.Length; i++)

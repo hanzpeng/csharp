@@ -38,6 +38,7 @@ namespace Hanz001_target_number
         }
         public int WaysByBuilder(int[] nums, int target)
         {
+            // number of ways to get to target, key=target, val= number of ways
             Dictionary<int, int> sumWays = new Dictionary<int, int>();
             sumWays[0] = 1;
             for (int i = 0; i < nums.Length; i++)
@@ -64,33 +65,32 @@ namespace Hanz001_target_number
         }
         public int WaysByRecurssion(int[] nums, int target)
         {
-            int lastIndex = nums.Length - 1;
             Dictionary<int, int>[] waysForTargetsAtIndex = new Dictionary<int, int>[nums.Length];
             for (int i = 0; i < nums.Length; i++)
             {
                 waysForTargetsAtIndex[i] = new Dictionary<int, int>();
             }
-            return WaysByRecurssionHelper(nums, target, lastIndex, waysForTargetsAtIndex);
+            return WaysByRecurssionHelper(nums, target, 0, waysForTargetsAtIndex);
         }
-        public int WaysByRecurssionHelper(int[] nums, int target, int lastIndex, Dictionary<int, int>[] waysToTargetsAtIndex)
+        public int WaysByRecurssionHelper(int[] nums, int target, int index, Dictionary<int, int>[] waysToTargetsAtIndex)
         {
-            if (lastIndex == -1)
+            if (index == nums.Length)
             {
                 if (target == 0) return 1;
                 else return 0;
             }
 
-            if (waysToTargetsAtIndex[lastIndex].ContainsKey(target))
+            if (waysToTargetsAtIndex[index].ContainsKey(target))
             {
-                return waysToTargetsAtIndex[lastIndex][target];
+                return waysToTargetsAtIndex[index][target];
             }
 
             int ways =
-                WaysByRecurssionHelper(nums, target + nums[lastIndex], lastIndex - 1, waysToTargetsAtIndex) +
-                WaysByRecurssionHelper(nums, target - nums[lastIndex], lastIndex - 1, waysToTargetsAtIndex) +
-                WaysByRecurssionHelper(nums, target, lastIndex - 1, waysToTargetsAtIndex);
+                WaysByRecurssionHelper(nums, target + nums[index], index + 1, waysToTargetsAtIndex) +
+                WaysByRecurssionHelper(nums, target - nums[index], index + 1, waysToTargetsAtIndex) +
+                WaysByRecurssionHelper(nums, target, index + 1, waysToTargetsAtIndex);
 
-            waysToTargetsAtIndex[lastIndex][target] = ways;
+            waysToTargetsAtIndex[index][target] = ways;
             return ways;
 
             //Space Complexity: O(SumRange*N)
