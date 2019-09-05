@@ -36,9 +36,37 @@ namespace P494_TargetSum
         [Test]
         public void Test1()
         {
+            Assert.AreEqual(5, BruteForce(new int[] { 1, 1, 1, 1, 1 }, target: 3));
             Assert.AreEqual(5, WaysByBuilder(new int[] { 1, 1, 1, 1, 1 }, target: 3));
             Assert.AreEqual(5, WaysByRecurssion(new int[] { 1, 1, 1, 1, 1 }, target: 3));
         }
+        public int BruteForce(int[] nums, int target)
+        {
+            List<int> sumList = new List<int>();
+            sumList.Add(0); // this is important, this is the case that we do not pick any element
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var tempList = new List<int>();
+                foreach (var s in sumList)
+                {
+                    tempList.Add(s + nums[i]);  // plus value
+                    tempList.Add(s - nums[i]);  // minues value
+                }
+                sumList = tempList;
+            }
+            int count = 0;
+            foreach (var s in sumList)
+            {
+                if (s == target) count++;
+            }
+            return count;
+
+            // Space Complexity: O(2^N)    (Max Lengh of the sumList/tempList)
+            // Time  Complexity: O(N * 2^N) each value of tempList is process N times 
+
+        }
+
+
         public int WaysByBuilder(int[] nums, int target)
         {
             // number of ways to get to target, key=target, val= number of ways

@@ -10,8 +10,9 @@ namespace Hanz001_target_number
         /****************************************************************************
         https://www.geeksforgeeks.org/number-of-ways-to-calculate-a-target-number-using-only-array-elements/
             Number of ways to calculate a target number using only array elements
+
             Given an integer array, find number of ways to calculate a target number 
-            using only array elements and addition or subtraction operator.
+            using only each array element at most once and with addition or subtraction operator.
 
             Example 1:
 
@@ -27,6 +28,11 @@ namespace Hanz001_target_number
         [Test]
         public void Test1()
         {
+            Assert.AreEqual(4, BruteForce(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, BruteForce(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, BruteForce(new int[] { -3, 1, 3, 5, 7 }, target: 6));
+
+
             Assert.AreEqual(4, WaysByBuilder(new int[] { -3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, WaysByBuilder(new int[] { 1, 2, 3, 4 }, target: 5));
             Assert.AreEqual(10, WaysByBuilder(new int[] { -3, 1, 3, 5, 7 }, target: 6));
@@ -36,6 +42,32 @@ namespace Hanz001_target_number
             Assert.AreEqual(10, WaysByRecurssion(new int[] { -3, 1, 3, 5, 7 }, target: 6));
 
         }
+        public int BruteForce(int[] nums, int target)
+        {
+            List<int> sumList = new List<int>();
+            sumList.Add(0); // this is important, this is the case that we do not pick any element
+            for (int i = 0; i < nums.Length; i++)
+            {
+                var tempList = new List<int>();
+                foreach (var s in sumList)
+                {
+                    tempList.Add(s + nums[i]);  // plus value
+                    tempList.Add(s - nums[i]);  // minues value
+                    tempList.Add(s);            // ignore value
+                }
+                sumList = tempList;
+            }
+            int count = 0;
+            foreach(var s in sumList)
+            {
+                if (s == target) count++;
+            }
+            return count;
+
+            // Space Complexity: O(3^N)    (Max Lengh of the sumList/tempList)
+            // Time  Complexity: O(N * 3^N) each value of tempList is process N times 
+        }
+
         public int WaysByBuilder(int[] nums, int target)
         {
             // number of ways to get to target, key=target, val= number of ways
