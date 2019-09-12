@@ -9,40 +9,218 @@ namespace Hanz001_target_number
     {
         /****************************************************************************
         https://www.geeksforgeeks.org/number-of-ways-to-calculate-a-target-number-using-only-array-elements/
-            Number of ways to calculate a target number using only array elements
+             Number of ways to calculate a target number using only array elements
 
-            Given an integer array, find number of ways to calculate a target number 
-            using only each array element at most once and with addition or subtraction operator.
+             Given an non-zero integer array, find number of ways to calculate a target number 
+             each element can be used zero time or once 
+             You can use positive or negative value for each number
+ 
+             ==========================
+             Example 1:
 
-            Example 1:
+             Input: arr[] = {1, 2, 3, 4}
+             target = 5
+ 
 
-            Input: arr[] = {-3, 1, 3, 5}, k = 6
-            Output: 4
+             Explanation
+ 
+             2 + 3
+             1 + 4
+             -1 + 2 + 4
+             -2 + 3 + 4
 
-            Explanation - 
-            - (-3) + (3)
-            + ( 1) + (5)
-            + (-3) + (1) + (3) + (5)
-            - (-3) + (1) - (3) + (5)
+             Output: 4
+
+             ==========================
+             Example 2:
+
+             Input: arr[] = {3, 1, 3, 5}, 
+             Target = 5
+
+             Explanation - 
+ 
+             3 + 3
+             1 + 5
+            -3 + 1 + 3 + 5
+             3 + 1 - 3 + 5
+             Output: 4
+
+             ==========================
+
          ******************************************************************************/
+
         [Test]
         public void Test1()
         {
-            Assert.AreEqual(4, BruteForce(new int[] { -3, 1, 3, 5 }, target: 6));
-            Assert.AreEqual(4, BruteForce(new int[] { 1, 2, 3, 4 }, target: 5));
-            Assert.AreEqual(10, BruteForce(new int[] { -3, 1, 3, 5, 7 }, target: 6));
+
+            Assert.AreEqual(4, BruteForce1_recur(new int[] { 3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, BruteForce1_recur(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, BruteForce1_recur(new int[] { 3, 1, 3, 5, 7 }, target: 6));
+
+            Assert.AreEqual(4, BruteForce1_iter(new int[] { 3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, BruteForce1_iter(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, BruteForce1_iter(new int[] { 3, 1, 3, 5, 7 }, target: 6));
 
 
-            Assert.AreEqual(4, WaysByBuilder(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, WaysByBuilder(new int[] { 3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, WaysByBuilder(new int[] { 1, 2, 3, 4 }, target: 5));
-            Assert.AreEqual(10, WaysByBuilder(new int[] { -3, 1, 3, 5, 7 }, target: 6));
+            Assert.AreEqual(10, WaysByBuilder(new int[] { 3, 1, 3, 5, 7 }, target: 6));
 
-            Assert.AreEqual(4, WaysByRecurssion(new int[] { -3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, WaysByRecurssion(new int[] { 3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, WaysByRecurssion(new int[] { 1, 2, 3, 4 }, target: 5));
-            Assert.AreEqual(10, WaysByRecurssion(new int[] { -3, 1, 3, 5, 7 }, target: 6));
+            Assert.AreEqual(10, WaysByRecurssion(new int[] { 3, 1, 3, 5, 7 }, target: 6));
 
         }
-        public int BruteForce(int[] nums, int target)
+        public int BruteForce1_recur(int[] nums, int target)
+        {
+            if (nums.Length == 0) return 0;
+
+            //var allLists = GetAllListsRecur(nums,nums.Length-1);
+
+            var allLists = new List<List<int>>();
+            allLists = GetAllLists_TailRecur(nums, nums.Length - 1, allLists);
+
+            int count = 0;
+            foreach (var li in allLists)
+            {
+                int sum = 0;
+                foreach (var val in li)
+                {
+                    sum += val;
+                }
+
+                if (sum == target)
+                {
+                    count++;
+                }
+            }
+            return count;
+
+            // Space Complexity: O(N*3^N)    (Max Lengh of the sumList/tempList)
+            // Time  Complexity: O(N * 3^(N+1)) each value of tempList is process N times (3^0 + 3^1 + 3^2 + .... + 3^n-1 + 3^N))
+        }
+
+        List<List<int>> GetAllListsRecur(int[] nums, int index)
+        {
+            var allLists = new List<List<int>>();
+            if (index == 0)
+            {
+                var l0 = new List<int>();
+                var l1 = new List<int>();
+                var l2 = new List<int>();
+
+                l0.Add(0);
+                l1.Add(nums[index]);
+                l2.Add(-nums[index]);
+
+                allLists.Add(l0);
+                allLists.Add(l1);
+                allLists.Add(l2);
+
+                return allLists;
+            }
+
+            var preLists = GetAllListsRecur(nums, index - 1);
+            var tempLists = new List<List<int>>(preLists);
+            foreach(var li in preLists)
+            {
+                var l0 = new List<int>(li);
+                var l1 = new List<int>(li);
+                var l2 = new List<int>(li);
+                l1.Add(nums[index]);
+                l2.Add(-nums[index]);
+                tempLists.Add(l1);
+                tempLists.Add(l2);
+            }
+            return tempLists;
+        }
+
+        List<List<int>> GetAllLists_TailRecur(int[] nums, int index, List<List<int>> allLists)
+        {
+            var nextIndex = index++;
+            if (index == 0)
+            {
+                var l0 = new List<int>();
+                var l1 = new List<int>();
+                var l2 = new List<int>();
+
+                l0.Add(0);
+                l1.Add(nums[index]);
+                l2.Add(-nums[index]);
+
+                allLists.Add(l0);
+                allLists.Add(l1);
+                allLists.Add(l2);
+                return allLists;
+            }
+            else if (index < nums.Length)
+            {
+                var tempLists = new List<List<int>>(allLists);
+                foreach (var li in allLists)
+                {
+                    var l0 = new List<int>(li);
+                    var l1 = new List<int>(li);
+                    var l2 = new List<int>(li);
+                    l1.Add(nums[index]);
+                    l2.Add(-nums[index]);
+                    tempLists.Add(l1);
+                    tempLists.Add(l2);
+                }
+            }
+
+            return GetAllLists_TailRecur(nums, index-1, allLists);
+        }
+
+        public int BruteForce1_iter(int[] nums, int target)
+        {
+            if (nums.Length == 0) return 0;
+            var allLists = new List<List<int>>();
+            var l0 = new List<int>();
+            var l1 = new List<int>();
+            var l2 = new List<int>();
+            l0.Add(0);
+            l1.Add(nums[0]);
+            l2.Add(-nums[0]);
+
+            allLists.Add(l0);
+            allLists.Add(l1);
+            allLists.Add(l2);
+            for (int i = 1; i < nums.Length; i++)
+            {
+                var tempLists = new List<List<int>>(allLists);
+                foreach (var li in allLists)
+                {
+                    l1 = new List<int>(li);
+                    l2 = new List<int>(li);
+                    l1.Add(nums[i]);
+                    l2.Add(-nums[i]);
+                    tempLists.Add(l1);
+                    tempLists.Add(l2);
+                }
+                allLists = tempLists;
+            }
+
+            int count = 0;
+            foreach (var li in allLists)
+            {
+                int sum = 0;
+                foreach(var val in li)
+                {
+                    sum += val;
+                }
+
+                if(sum == target)
+                {
+                    count++;
+                }
+            }
+            return count;
+
+            // Space Complexity: O(N*3^N)    (Max Lengh of the sumList/tempList)
+            // Time  Complexity: O(N * 3^(N+1)) each value of tempList is process N times (3^0 + 3^1 + 3^2 + .... + 3^n-1 + 3^N))
+        }
+
+        public int BruteForce2(int[] nums, int target)
         {
             List<int> sumList = new List<int>();
             sumList.Add(0); // this is important, this is the case that we do not pick any element
