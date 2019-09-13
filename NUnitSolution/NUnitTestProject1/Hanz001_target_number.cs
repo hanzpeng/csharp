@@ -57,6 +57,11 @@ namespace Hanz001_target_number
             Assert.AreEqual(4, BruteForce1_recur(new int[] { 1, 2, 3, 4 }, target: 5));
             Assert.AreEqual(10, BruteForce1_recur(new int[] { 3, 1, 3, 5, 7 }, target: 6));
 
+
+            Assert.AreEqual(4, BruteForce1_tailrecur(new int[] { 3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, BruteForce1_tailrecur(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, BruteForce1_tailrecur(new int[] { 3, 1, 3, 5, 7 }, target: 6));
+
             Assert.AreEqual(4, BruteForce1_iter(new int[] { 3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, BruteForce1_iter(new int[] { 1, 2, 3, 4 }, target: 5));
             Assert.AreEqual(10, BruteForce1_iter(new int[] { 3, 1, 3, 5, 7 }, target: 6));
@@ -75,10 +80,35 @@ namespace Hanz001_target_number
         {
             if (nums.Length == 0) return 0;
 
-            //var allLists = GetAllListsRecur(nums,nums.Length-1);
+            var allLists = GetAllListsRecur(nums, nums.Length - 1);
 
-            var allLists = new List<List<int>>();
-            allLists = GetAllLists_TailRecur(nums, nums.Length - 1, allLists);
+            int count = 0;
+            foreach (var li in allLists)
+            {
+                int sum = 0;
+                foreach (var val in li)
+                {
+                    sum += val;
+                }
+
+                if (sum == target)
+                {
+                    count++;
+                }
+            }
+            return count;
+
+            // Space Complexity: O(N*3^N)    (Max Lengh of the sumList/tempList)
+            // Time  Complexity: O(N * 3^(N+1)) each value of tempList is process N times (3^0 + 3^1 + 3^2 + .... + 3^n-1 + 3^N))
+        }
+
+        public int BruteForce1_tailrecur(int[] nums, int target)
+        {
+            if (nums.Length == 0) return 0;
+
+            var currentLists = new List<List<int>>();
+            currentLists.Add(new List<int>());
+            var allLists = GetAllLists_TailRecur(nums, 0, currentLists);
 
             int count = 0;
             foreach (var li in allLists)
@@ -122,7 +152,7 @@ namespace Hanz001_target_number
 
             var preLists = GetAllListsRecur(nums, index - 1);
             var tempLists = new List<List<int>>(preLists);
-            foreach(var li in preLists)
+            foreach (var li in preLists)
             {
                 var l0 = new List<int>(li);
                 var l1 = new List<int>(li);
@@ -135,81 +165,65 @@ namespace Hanz001_target_number
             return tempLists;
         }
 
-        List<List<int>> GetAllLists_TailRecur(int[] nums, int index, List<List<int>> allLists)
+        List<List<int>> GetAllLists_TailRecur(int[] nums, int index, List<List<int>> currentLists)
         {
-            var nextIndex = index++;
-            if (index == 0)
-            {
-                var l0 = new List<int>();
-                var l1 = new List<int>();
-                var l2 = new List<int>();
 
-                l0.Add(0);
-                l1.Add(nums[index]);
-                l2.Add(-nums[index]);
+            List<List<int>> nextLists = new List<List<int>>();
 
-                allLists.Add(l0);
-                allLists.Add(l1);
-                allLists.Add(l2);
-                return allLists;
-            }
-            else if (index < nums.Length)
+            if (index < nums.Length && currentLists != null)
             {
-                var tempLists = new List<List<int>>(allLists);
-                foreach (var li in allLists)
+                nextLists = new List<List<int>>(currentLists);
+                foreach (var li in currentLists)
                 {
-                    var l0 = new List<int>(li);
                     var l1 = new List<int>(li);
                     var l2 = new List<int>(li);
                     l1.Add(nums[index]);
                     l2.Add(-nums[index]);
-                    tempLists.Add(l1);
-                    tempLists.Add(l2);
+                    nextLists.Add(l1);
+                    nextLists.Add(l2);
                 }
             }
+            else if (index == nums.Length)
+            {
+                return currentLists;
+            }
 
-            return GetAllLists_TailRecur(nums, index-1, allLists);
+            return GetAllLists_TailRecur(nums, index + 1, nextLists);
         }
 
         public int BruteForce1_iter(int[] nums, int target)
         {
             if (nums.Length == 0) return 0;
-            var allLists = new List<List<int>>();
-            var l0 = new List<int>();
-            var l1 = new List<int>();
-            var l2 = new List<int>();
-            l0.Add(0);
-            l1.Add(nums[0]);
-            l2.Add(-nums[0]);
 
-            allLists.Add(l0);
-            allLists.Add(l1);
-            allLists.Add(l2);
-            for (int i = 1; i < nums.Length; i++)
+            var currentLists = new List<List<int>>();
+            currentLists.Add(new List<int>());
+
+            for (int i = 0; i < nums.Length; i++)
             {
-                var tempLists = new List<List<int>>(allLists);
-                foreach (var li in allLists)
+                var nextLists = new List<List<int>>(currentLists);
+                
+                foreach (var li in currentLists)
                 {
-                    l1 = new List<int>(li);
-                    l2 = new List<int>(li);
+                    var l1 = new List<int>(li);
+                    var l2 = new List<int>(li);
                     l1.Add(nums[i]);
                     l2.Add(-nums[i]);
-                    tempLists.Add(l1);
-                    tempLists.Add(l2);
+                    nextLists.Add(l1);
+                    nextLists.Add(l2);
                 }
-                allLists = tempLists;
+                currentLists = nextLists;
             }
 
             int count = 0;
-            foreach (var li in allLists)
+            foreach (var li in currentLists)
             {
                 int sum = 0;
-                foreach(var val in li)
+                foreach (var val in li)
                 {
                     sum += val;
                 }
 
-                if(sum == target)
+                if (sum == target)
                 {
                     count++;
                 }
@@ -236,7 +250,7 @@ namespace Hanz001_target_number
                 sumList = tempList;
             }
             int count = 0;
-            foreach(var s in sumList)
+            foreach (var s in sumList)
             {
                 if (s == target) count++;
             }
