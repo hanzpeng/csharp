@@ -133,20 +133,10 @@ namespace Hanz001_target_number
         List<List<int>> GetAllListsRecur(int[] nums, int index)
         {
             var allLists = new List<List<int>>();
-            if (index == 0)
+            if (index < 0)
             {
                 var l0 = new List<int>();
-                var l1 = new List<int>();
-                var l2 = new List<int>();
-
-                l0.Add(0);
-                l1.Add(nums[index]);
-                l2.Add(-nums[index]);
-
                 allLists.Add(l0);
-                allLists.Add(l1);
-                allLists.Add(l2);
-
                 return allLists;
             }
 
@@ -154,7 +144,6 @@ namespace Hanz001_target_number
             var tempLists = new List<List<int>>(preLists);
             foreach (var li in preLists)
             {
-                var l0 = new List<int>(li);
                 var l1 = new List<int>(li);
                 var l2 = new List<int>(li);
                 l1.Add(nums[index]);
