@@ -11,26 +11,23 @@ namespace Hanz001_target_number
         https://www.geeksforgeeks.org/number-of-ways-to-calculate-a-target-number-using-only-array-elements/
              Number of ways to calculate a target number using only array elements
 
-             Given an non-zero integer array, find number of ways to calculate a target number 
-             each element can be used zero time or once 
-             You can use positive or negative value for each number
- 
+             Given an array of non-zero positive integers, 
+             Find number of ways to calculate a target sum, 
+             with each element used zero or one time.
+             You can use positive, negative, or zero value of each element.
+
              ==========================
              Example 1:
 
              Input: arr[] = {1, 2, 3, 4}
              target = 5
- 
-
-             Explanation
- 
-             2 + 3
-             1 + 4
-             -1 + 2 + 4
-             -2 + 3 + 4
-
              Output: 4
 
+             Explanation: total 4 ways to get 5:
+               (  ) + (+2) + (+3) + (  ) 
+               (+1) + (  ) + (  ) + (+4)
+               (-1) + (+2) + (  ) + (+4)
+               (  ) + (-2) + (+3) + (+4)
              ==========================
              Example 2:
 
@@ -133,20 +130,10 @@ namespace Hanz001_target_number
         List<List<int>> GetAllListsRecur(int[] nums, int index)
         {
             var allLists = new List<List<int>>();
-            if (index == 0)
+            if (index < 0)
             {
                 var l0 = new List<int>();
-                var l1 = new List<int>();
-                var l2 = new List<int>();
-
-                l0.Add(0);
-                l1.Add(nums[index]);
-                l2.Add(-nums[index]);
-
                 allLists.Add(l0);
-                allLists.Add(l1);
-                allLists.Add(l2);
-
                 return allLists;
             }
 
@@ -154,7 +141,6 @@ namespace Hanz001_target_number
             var tempLists = new List<List<int>>(preLists);
             foreach (var li in preLists)
             {
-                var l0 = new List<int>(li);
                 var l1 = new List<int>(li);
                 var l2 = new List<int>(li);
                 l1.Add(nums[index]);
