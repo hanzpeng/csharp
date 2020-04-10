@@ -10,32 +10,50 @@ namespace Hanz001_target_number
         /****************************************************************************
         https://www.geeksforgeeks.org/number-of-ways-to-calculate-a-target-number-using-only-array-elements/
              Number of ways to calculate a target number using only array elements
+       Interview Problem
 
-             Given an array of non-zero positive integers, 
-             Find number of ways to calculate a target sum, 
-             with each element used zero or one time.
-             You can use positive, negative, or zero value of each element.
+       Given an array of positive integers, 
 
-             ==========================
-             Example 1:
+       Find number of ways to calculate a target sum, 
 
-             Input: arr[] = {1, 2, 3, 4}
-             target = 5
-             Output: 4
+       with each element used zero or one time.
 
-             Explanation: total 4 ways to get 5:
-               (  ) + (+2) + (+3) + (  ) 
-               (+1) + (  ) + (  ) + (+4)
-               (-1) + (+2) + (  ) + (+4)
-               (  ) + (-2) + (+3) + (+4)
-             ==========================
+       You can use positive, negative, or zero value of each element.
+
+
+
+       int ways(int[] nums, int t)
+
+
+
+       ==========================
+
+       Example 1:
+
+          Input array: int[] nums = {1, 2, 3, 4}
+
+          Target Sum:int t = 5
+
+       Explanation: 
+            1         2        3          4
+        (      ) + (   2  ) + ( 3  ) + (    ) 
+
+        (   1 ) + (       ) + (     ) + ( 4 )
+
+        (  -1 ) + (   2  ) + (     ) + ( 4 )
+
+        (      ) + ( - 2  ) + ( 3  ) + ( 4 )
+
+        Output: 4
+
+       ==========================
              Example 2:
 
              Input: arr[] = {3, 1, 3, 5}, 
              Target = 5
 
-             Explanation - 
- 
+             Explanation  
+             3   1   3   5
              3 + 3
              1 + 5
             -3 + 1 + 3 + 5

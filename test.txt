@@ -1,4 +1,4 @@
-<MonitoringManagement eventVersion="2" version="1.0" timestamp="2015-12-07T00:00:00Z" namespace="DCATvNextGBL">
+<MonitoringManagement version="1.0" eventVersion="1" namespace="exmsdcatnet" timestamp="2019-02-28T00:00:00Z">
   <Imports>
     <!-- Imports documentation: https://jarvis.dc.ad.msft.net/?page=documents&section=9c95f4eb-8689-4c9f-81bf-82d688e860fd&id=15b0c8c4-c82f-4659-a4c8-52f153879a03   -->
     <!-- You can import other files.  The AgentStandardEvents.xml emits metrics about the agent -->
@@ -6,12 +6,12 @@
     <Import file="AzureSecurityPackMds.xml" />
   </Imports>
   <Accounts>
-    <Account moniker="dcatvnextgbldiag" isDefault="true" />
-    <Account moniker="dcatvnextgblsecurity" alias="AzSecurityStore" />
-    <Account moniker="dcatvnextgblaudit" alias="AuditStore" />
+    <Account moniker="exmsdcatnetaudit" alias="AuditStore" />
+    <Account moniker="exmsdcatnetdiag" isDefault="true" />
+    <Account moniker="exmsdcatnetsecurity" alias="AzSecurityStore" />
   </Accounts>
   <!-- Management documentation: https://jarvis.dc.ad.msft.net/?page=documents&section=9c95f4eb-8689-4c9f-81bf-82d688e860fd&id=8794f47e-d1b2-4538-8f31-839c41c1710a  -->
-  <Management defaultRetentionInDays="180">
+  <Management defaultRetentionInDays="90">
     <!--
       The identity TenantRole means MONITORING_IDENTITY, MONITORING_ROLE, and MONITORING_ROLE_INSTANCE will
       uniquely identify any of your instances
@@ -22,7 +22,7 @@
       AgentResourceUsage element's attributes.
     -->
     <AgentResourceUsage diskQuotaInMB="25000" cpuPercentUsage="50" />
-    <AgentMetrics mdmMonitoringAccount="DCATvNextGBL" />
+    <AgentMetrics mdmMonitoringAccount="exmsdcatnet" />
   </Management>
   <!-- Events documentation: https://jarvis.dc.ad.msft.net/?page=documents&section=9c95f4eb-8689-4c9f-81bf-82d688e860fd&id=ac0084ad-5065-4b16-8f7d-0a5193143378   -->
   <!--
@@ -30,7 +30,7 @@
       Events must be defined in the order of the mds2.xsd.
     -->
   <Events>
-    <CounterSets storeType="CentralBond" mdmMonitoringAccount="%MDM_MONITORING_ACCOUNT%" account="dcatvnextgbldiag">
+    <CounterSets mdmMonitoringAccount="exmsdcatnet" storeType="CentralBond" account="exmsdcatnetdiag">
       <CounterSet eventName="CounterEvent" sampleRateInSeconds="10">
         <MdmDimensions>
           <MdmDimension name="CloudTenant"><![CDATA[GetEnvironmentVariable("MONITORING_TENANT_NAME")]]></MdmDimension>
@@ -77,20 +77,20 @@
       </CounterSet>
     </CounterSets>
     <WindowsEventLogSubscriptions>
-      <Subscription eventName="ApplicationEvents" query="Application!*" storeType="CentralBond">
+      <Subscription storeType="CentralBond" eventName="ApplicationEvents" query="Application!*">
         <Column name="ProviderName" defaultAssignment="">
           <Value>/Event/System/Provider/@Name</Value>
         </Column>
-        <Column name="Level" type="mt:int32" defaultAssignment="4">
+        <Column type="mt:int32" name="Level" defaultAssignment="4">
           <Value>/Event/System/Level</Value>
         </Column>
         <Column name="Task" defaultAssignment="">
           <Value>/Event/System/Task</Value>
         </Column>
-        <Column name="EventId" defaultAssignment="0" type="mt:int32">
+        <Column type="mt:int32" name="EventId" defaultAssignment="0">
           <Value>/Event/System/EventID</Value>
         </Column>
-        <Column name="OpCode" type="mt:int32" defaultAssignment="0">
+        <Column type="mt:int32" name="OpCode" defaultAssignment="0">
           <Value>/Event/System/Opcode</Value>
         </Column>
         <Column name="EventData" defaultAssignment="">
@@ -99,7 +99,7 @@
       </Subscription>
     </WindowsEventLogSubscriptions>
     <CrashDumpMonitor>
-      <CrashDumpItem eventName="CrashDumpEvent" storeType="CentralBond" useAzureWatson="true">
+      <CrashDumpItem storeType="CentralBond" eventName="CrashDumpEvent" useAzureWatson="true">
         <ProcessList>
           <Process>[All]</Process>
         </ProcessList>
@@ -108,12 +108,12 @@
     <!--
       IisLogSubscriptions documentation: https://jarvis.dc.ad.msft.net/?page=documents&section=9c95f4eb-8689-4c9f-81bf-82d688e860fd&id=fce02316-fda5-4416-b04e-9067c667a5a1
     -->
-    <IisLogSubscriptions account="dcatvnextgbldiag" storeType="Local">
-      <Subscription eventName="IisLogs" storeType="CentralBond" filter=".*" />
+    <IisLogSubscriptions storeType="CentralBond" account="exmsdcatnetdiag">
+      <Subscription storeType="CentralBond" eventName="IisLogs" filter=".*" />
       <Subscription storeType="Local" eventName="HttpErrors" filter="HTTPERR" />
     </IisLogSubscriptions>
     <!-- Enable consumption of Ifx Events -->
-    <IfxEvents storeType="CentralBond" sessionName="ifxsession">
+    <IfxEvents storeType="CentralBond" account="exmsdcatnetdiag" sessionName="ifxsession">
       <Event id="Ifx.PartASchema/Ifx.BaseOperationSchema/Ifx.OperationSchema" eventName="OperationEvent" />
       <Event id="Ifx.PartASchema/Ifx.BaseOperationSchema/Ifx.QoSSchema" eventName="QoSEvent" />
       <Event id="Ifx.PartASchema/Ifx.ObjectTextPropertySchema" eventName="ObjectTextPropertyEvent" />
@@ -123,9 +123,9 @@
       <Event id="Ifx.PartASchema/Ifx.ObjectReferenceSchema" eventName="ObjectReferenceEvent" />
       <Event id="Ifx.PartASchema/Ifx.BaseAvailabilityQoSSchema/Ifx.HeartbeatQoSSchema" eventName="HeartbeatQoSEvent" />
       <Event id="Ifx.PartASchema/Ifx.BaseAvailabilityQoSSchema/Ifx.ResourceAvailabilityImpactingEventSchema" eventName="ResourceAvailabilityImpactingEventEvent" />
-      <Event id="Ifx.PartASchema/DcatvNextIfx.DcatvNextEvent" eventName="DcatvNextEvent" storeType="CentralBond" priority="High" />
-      <Event id="Ifx.PartASchema/DcatvNextIfx.WmiTraffic" eventName="WmiTraffic" storeType="CentralBond" priority="High" />
-      <Event id="Ifx.TracePartASchema/Ifx.TraceSchema" eventName="TraceEvent" />
+      <Event id="Ifx.PartASchema/DcatvNextIfx.DcatvNextEvent" storeType="CentralBond" eventName="DcatvNextEvent" priority="High" />
+      <Event id="Ifx.PartASchema/DcatvNextIfx.WmiTraffic" storeType="CentralBond" eventName="WmiTraffic" priority="High" />
+      <Event id="Ifx.TracePartASchema/Ifx.TraceSchema" storeType="CentralBond" eventName="TraceEvent" priority="High" />
     </IfxEvents>
     <Extensions>
       <Extension extensionName="MetricsExtension">
@@ -133,4 +133,33 @@
       </Extension>
     </Extensions>
   </Events>
+  <EventStreamingAnnotations>
+    <EventStreamingAnnotation name="^.*QoSEvent$">
+      <Cosmos>
+        <Content><![CDATA[ <Config/>  ]]></Content>
+      </Cosmos>
+      <DistributedTracing>
+        <Content><![CDATA[<Config />]]></Content>
+      </DistributedTracing>
+    </EventStreamingAnnotation>
+    <EventStreamingAnnotation name="^.*TraceEvent$">
+      <DistributedTracing>
+        <Content><![CDATA[<Config />]]></Content>
+      </DistributedTracing>
+    </EventStreamingAnnotation>
+  </EventStreamingAnnotations>
+  <EnvelopeSchema>
+    <Field name="AppVer">"My_AppVer"</Field>
+    <Field name="AppId">"My_AppId"</Field>
+    <Field name="IKey">"My_IKey"</Field>
+    <Extension name="Cloud">
+      <Field name="Name">GetEnvironmentVariable("MONITORING_TENANT")</Field>
+      <Field name="Role">GetEnvironmentVariable("MONITORING_ROLE")</Field>
+      <Field name="RoleVer">"My_Cloud_RoleVer"</Field>
+      <Field name="RoleInstance">GetEnvironmentVariable("MONITORING_ROLE_INSTANCE")</Field>
+      <Field name="Environment">"My_Cloud_Environment"</Field>
+      <Field name="Location">"My_Cloud_Location"</Field>
+      <Field name="DeploymentUnit">"My_Cloud_DeploymentUnit"</Field>
+    </Extension>
+  </EnvelopeSchema>
 </MonitoringManagement>
