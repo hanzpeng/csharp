@@ -67,6 +67,9 @@ namespace Hanz001_target_number
         [Test]
         public void Test1()
         {
+            Assert.AreEqual(4, getCount(new int[] { 3, 1, 3, 5 }, target: 6));
+            Assert.AreEqual(4, getCount(new int[] { 1, 2, 3, 4 }, target: 5));
+            Assert.AreEqual(10, getCount(new int[] { 3, 1, 3, 5, 7 }, target: 6));
 
             Assert.AreEqual(4, BruteForce1_recur(new int[] { 3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, BruteForce1_recur(new int[] { 1, 2, 3, 4 }, target: 5));
@@ -89,8 +92,59 @@ namespace Hanz001_target_number
             Assert.AreEqual(4, WaysByRecurssion(new int[] { 3, 1, 3, 5 }, target: 6));
             Assert.AreEqual(4, WaysByRecurssion(new int[] { 1, 2, 3, 4 }, target: 5));
             Assert.AreEqual(10, WaysByRecurssion(new int[] { 3, 1, 3, 5, 7 }, target: 6));
-
         }
+
+        public int getCount(int[] nums, int target)
+        {
+            var targetCount = new Dictionary<int, int>();
+            targetCount[0] = 1;
+            foreach (var num in nums)
+            {
+                var plus = new Dictionary<int, int>();
+                var minus = new Dictionary<int, int>();
+
+                if (targetCount.Count == 0)
+                {
+                    plus[0] = 1;
+                    plus[num] = 1;
+                    minus[num] = 1;
+                }
+                else
+                {
+                    foreach (var pair in targetCount)
+                    {
+                        plus[pair.Key + num] = pair.Value;
+                        minus[pair.Key - num] = pair.Value;
+                    }
+                }
+
+                foreach (var pair in plus)
+                {
+                    if (targetCount.ContainsKey(pair.Key))
+                    {
+                        targetCount[pair.Key] += pair.Value;
+                    }
+                    else
+                    {
+                        targetCount[pair.Key] = pair.Value;
+                    }
+                }
+
+                foreach (var pair in minus)
+                {
+                    if (targetCount.ContainsKey(pair.Key))
+                    {
+                        targetCount[pair.Key] += pair.Value;
+                    }
+                    else
+                    {
+                        targetCount[pair.Key] = pair.Value;
+                    }
+                }
+            }
+            return targetCount[target];
+        }
+
         public int BruteForce1_recur(int[] nums, int target)
         {
             if (nums.Length == 0) return 0;
