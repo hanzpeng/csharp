@@ -30,21 +30,24 @@ namespace Hanz001_target_number
 
        Example 1:
 
-          Input array: int[] nums = {1, 2, 3, 4}
+       Interview Problem: Number of ways to calculate a target number using only array elements
 
-          Target Sum:int t = 5
+       Given an array of positive integers, Find number of ways to calculate a target sum with each element used zero or one time. You can use positive, negative, or zero value of each element.
+
+       int ways(int[] nums, int t)
+
+       Example
+          Input array: int[] nums = {1, 2, 3, 4}
+          Target sum:  int t = 5
 
        Explanation: 
-            1         2        3          4
-        (      ) + (   2  ) + ( 3  ) + (    ) 
+            1          2         3         4
+        (      ) + (   2  ) + (  3  ) + (     )  =  5
+        (   1  ) + (      ) + (     ) + (  4  )  =  5
+        (  -1  ) + (   2  ) + (     ) + (  4  )  =  5
+        (      ) + ( - 2  ) + (  3  ) + (  4  )  =  5
 
-        (   1 ) + (       ) + (     ) + ( 4 )
-
-        (  -1 ) + (   2  ) + (     ) + ( 4 )
-
-        (      ) + ( - 2  ) + ( 3  ) + ( 4 )
-
-        Output: 4
+        Output: 4, there are 4 ways to get sum of 5
 
        ==========================
              Example 2:
@@ -58,9 +61,10 @@ namespace Hanz001_target_number
              1 + 5
             -3 + 1 + 3 + 5
              3 + 1 - 3 + 5
+
              Output: 4
 
-             ==========================
+        ==========================
 
          ******************************************************************************/
 
