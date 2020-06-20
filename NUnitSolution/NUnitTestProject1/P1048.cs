@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System;
 
 namespace P1048
 {
@@ -10,11 +11,11 @@ namespace P1048
         [Test]
         public void test1()
         {
-            //Assert.AreEqual(4,
-            //    LongestStrChain(
-            //        new string[]
-            //        { "a","b","ba","bca","bda","bdca" }
-            //    ));
+            Assert.AreEqual(4,
+                LongestStrChain(
+                    new string[]
+                    { "a","b","ba","bca","bda","bdca" }
+                ));
             Assert.AreEqual(7,
                 LongestStrChain(
                     new string[]
@@ -48,133 +49,92 @@ namespace P1048
              * zczpzfvdhx
              * */
         }
-        public static int LongestStrChain(string[] words)
-        {
-
+        public static int LongestStrChain(string[] words){
             if (words == null || words.Length == 0)
                 return 0;
-
             var maxWordLen = 0;
-            foreach (var w in words)
-            {
+            foreach (var w in words){
                 if (w.Length > maxWordLen)
                     maxWordLen = w.Length;
             }
-
             var lenWords = new Dictionary<int, List<string>>();
-
-            for (int i = 1; i <= maxWordLen; i++)
-            {
+            for (int i = 1; i <= maxWordLen; i++){
                 lenWords[i] = new List<string>();
             }
-
-            foreach (var w in words)
-            {
+            foreach (var w in words){
                 lenWords[w.Length].Add(w);
             }
 
-            var res = new List<Stack<string>>();
+            var res = new Dictionary<string,int>();
             int longestChain = 0;
-            for (int i = 1; i <= maxWordLen; i++)
-            {
-
-                if (lenWords[i].Count == 0)
-                {
-                    res = new List<Stack<string>>();
+            for (int i = 1; i <= maxWordLen; i++){
+                if (lenWords[i].Count == 0){
+                    res = new Dictionary<string, int>();
                     continue;
-                }
-
-                if (res.Count == 0)
-                {
-                    foreach (var w in lenWords[i])
-                    {
-                        var stack = new Stack<string>();
-                        stack.Push(w);
-                        res.Add(stack);
+                }else if (res.Count == 0){
+                    foreach (var w in lenWords[i]){
+                        res.Add(w,1);
                     }
-                }
-                else
-                {
-                    foreach (var w in lenWords[i])
-                    {
-                        var res1 = new List<Stack<string>>();
-
-                        foreach (var r in res)
-                        {
-                            if (isPre(r.Peek(), w))
-                            {
-                                r.Push(w);
-                            }
-                            else
-                            {
-                                var stack = new Stack<string>();
-                                stack.Push(w);
-                                res1.Add(stack);
+                    longestChain = Math.Max(longestChain, 1);
+                    continue;
+                }else{
+                    var res1 = new Dictionary<string, int>();
+                    foreach (var w in lenWords[i]){
+                        foreach (var k in res.Keys){
+                            if (isPre(k, w)){
+                                var oldVal = 0;
+                                if (res1.ContainsKey(w)){
+                                    oldVal = res1[w];
+                                }
+                                res1[w] = Math.Max(oldVal, res[k] + 1);
                             }
                         }
-                        foreach(var stack in res1)
-                        {
-                            res.Add(stack);
+                        if (!res1.ContainsKey(w)){
+                            res1[w] = 1;
                         }
                     }
+                    res = res1;
+                    longestChain = Math.Max(longestChain, res.Values.Max());
                 }
-                foreach(var stack in res)
-                {
-                    longestChain = (stack.Count > longestChain) ? stack.Count : longestChain;
-                }
-
             }
             return longestChain;
-
         }
 
         public static bool isPre(string a, string b)
         {
-            /*
-            for(int i=0;i<b.Length;i++){
-                if(b.Substring(0,i)+b.Substring(i+1,b.Length-i-1) == a){
-                    return true;
-                }
-            }
-
-            return false;
-            */
-
             if ((b.Length - a.Length) != 1) return false;
             int i = 0;
             int j = 0;
             bool oneDiff = false;
-            while (true)
-            {
-                if (i == a.Length)
-                {
+            while (true){
+                if (i == a.Length){
                     break;
-                }
-                if (a[i] == b[j])
-                {
+                }else if (a[i] == b[j]){
                     i++;
                     j++;
                     continue;
-                }
-                else
-                {
-                    if (oneDiff)
-                    {
+                }else{
+                    if (oneDiff){
                         return false;
                     }
                     oneDiff = true;
                     j++;
                 }
             }
-            if (oneDiff && j == i + 1 || (!oneDiff && j == i))
-            {
+            if (oneDiff && j == i + 1 || (!oneDiff && j == i)){
                 return true;
-            }
-            else
-            {
+            }else{
                 return false;
             }
 
+            /*
+            for(int i=0;i<b.Length;i++){
+                if(b.Substring(0,i)+b.Substring(i+1,b.Length-i-1) == a){
+                    return true;
+                }
+            }
+            return false;
+            */
         }
     }
 }
