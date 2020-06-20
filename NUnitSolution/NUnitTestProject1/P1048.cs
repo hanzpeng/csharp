@@ -73,7 +73,7 @@ namespace P1048
                     continue;
                 }else if (res.Count == 0){
                     foreach (var w in lenWords[i]){
-                        res.Add(w,1);
+                        res[w] = 1;
                     }
                     longestChain = Math.Max(longestChain, 1);
                     continue;
