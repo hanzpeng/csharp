@@ -11,43 +11,12 @@ namespace P1048
         [Test]
         public void test1()
         {
-            Assert.AreEqual(4,
-                LongestStrChain(
-                    new string[]
-                    { "a","b","ba","bca","bda","bdca" }
+            Assert.AreEqual(4,LongestStrChain(new string[]
+                    {"a","b","ba","bca","bda","bdca" }
                 ));
-            Assert.AreEqual(7,
-                LongestStrChain(
-                    new string[]
-                    { "ksqvsyq", "ks", "kss", "czvh", "zczpzvdhx",
-                        "zczpzvh", "zczpzvhx", "zcpzvh", "zczvh",
-                        "gr", "grukmj", "ksqvsq", "gruj", "kssq",
-                        "ksqsq", "grukkmj", "grukj", "zczpzfvdhx", "gru" }
+            Assert.AreEqual(7,LongestStrChain(new string[]
+                    { "ksqvsyq", "ks", "kss", "czvh", "zczpzvdhx","zczpzvh", "zczpzvhx", "zcpzvh", "zczvh","gr", "grukmj", "ksqvsq", "gruj", "kssq","ksqsq", "grukkmj", "grukj", "zczpzfvdhx", "gru" }
                 ));
-            /*
-             * 
-             * ks  
-             * kss 
-             * kssq 
-             * ksqsq
-             * ksqvsq
-             * ksqvsyq
-             * 
-             * gr
-             * gru
-             * gruj
-             * grukj
-             * grukmj
-             * grukkmj
-             * 
-             * czvh
-             * zczvh
-             * zcpzvh
-             * zczpzvh
-             * zczpzvhx
-             * zczpzvdhx
-             * zczpzfvdhx
-             * */
         }
         public static int LongestStrChain(string[] words){
             if (words == null || words.Length == 0)
