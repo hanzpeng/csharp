@@ -40,12 +40,12 @@ namespace P1048
              * grukmj
              * grukkmj
              * 
-             *  c  zvh
-             * zc  zvh
-             * zc pzvh
+             * czvh
+             * zczvh
+             * zcpzvh
              * zczpzvh
-             * zczpzv  hx
-             * zczpz vdhx
+             * zczpzvhx
+             * zczpzvdhx
              * zczpzfvdhx
              * */
         }
@@ -64,38 +64,39 @@ namespace P1048
             foreach (var w in words){
                 lenWords[w.Length].Add(w);
             }
-
-            var res = new Dictionary<string,int>();
+            ///////////////////////////////////////
+            //this is the key point of the solution.
+            ///////////////////////////////////////
+            var dp = new Dictionary<string,int>();
             int longestChain = 0;
+            // calculate dp1 based on dp for each i
             for (int i = 1; i <= maxWordLen; i++){
+                var dp1 = new Dictionary<string, int>();
                 if (lenWords[i].Count == 0){
-                    res = new Dictionary<string, int>();
-                    continue;
-                }else if (res.Count == 0){
+                    // no-op
+                }else if (dp.Count == 0){
                     foreach (var w in lenWords[i]){
-                        res[w] = 1;
+                        dp1[w] = 1;
                     }
                     longestChain = Math.Max(longestChain, 1);
-                    continue;
                 }else{
-                    var res1 = new Dictionary<string, int>();
                     foreach (var w in lenWords[i]){
-                        foreach (var k in res.Keys){
+                        foreach (var k in dp.Keys){
                             if (isPre(k, w)){
                                 var oldVal = 0;
-                                if (res1.ContainsKey(w)){
-                                    oldVal = res1[w];
+                                if (dp1.ContainsKey(w)){
+                                    oldVal = dp1[w];
                                 }
-                                res1[w] = Math.Max(oldVal, res[k] + 1);
+                                dp1[w] = Math.Max(oldVal, dp[k] + 1);
                             }
                         }
-                        if (!res1.ContainsKey(w)){
-                            res1[w] = 1;
+                        if (!dp1.ContainsKey(w)){
+                            dp1[w] = 1;
                         }
                     }
-                    res = res1;
-                    longestChain = Math.Max(longestChain, res.Values.Max());
+                    longestChain = Math.Max(longestChain, dp1.Values.Max());
                 }
+                dp = dp1;
             }
             return longestChain;
         }
@@ -128,6 +129,7 @@ namespace P1048
             }
 
             /*
+             * this is very slow
             for(int i=0;i<b.Length;i++){
                 if(b.Substring(0,i)+b.Substring(i+1,b.Length-i-1) == a){
                     return true;
