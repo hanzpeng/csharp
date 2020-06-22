@@ -69,6 +69,10 @@ namespace P1048
             }
             return longestChain;
         }
+        public int dfs()
+        {
+            return 0;
+        }
 
         public static bool isPre(string a, string b)
         {

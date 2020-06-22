@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System;
 
-namespace P1048
+namespace P1048_dp
 {
-    class P1048
+    class P1048_dp
     {
         [Test]
         public void test1()
