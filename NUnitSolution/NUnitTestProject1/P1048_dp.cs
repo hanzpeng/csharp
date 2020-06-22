@@ -122,7 +122,7 @@ namespace P1048_dp
                     j++;
                 }
             }
-            if (oneDiff && j == i + 1 || (!oneDiff && j == i)){
+            if (oneDiff || j == i){
                 return true;
             }else{
                 return false;
