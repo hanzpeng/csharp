@@ -47,19 +47,20 @@ namespace P1048
             Queue<string> q = new Queue<string>();
             int longestChain = 0;
 
-            for (int j = 1; j < maxWordLen; j++)
+            for (int j = 1; j <= maxWordLen; j++)
             {
                 foreach (var w in lenWords[j])
                 {
                     wSet[w] = 1;
                     q.Enqueue(w);
+                    longestChain = 1;
                 }
             }
 
             while (q.Count > 0)
             {
                 var current = q.Dequeue();
-                if (current.Length <= maxWordLen)
+                if (current.Length + 1 <= maxWordLen)
                 {
                     foreach (var child in lenWords[current.Length + 1])
                     {
@@ -75,82 +76,8 @@ namespace P1048
                     }
                 }
             }
-            //dfs------------------------------------------ -
-            //var wSet = new Dictionary<string, int>();
-            //int[] maxChainLen = new int[] { 0 };
-            //for (int i = 1; i <= maxWordLen; i++)
-            //{
-            //    Dfs("", 1, lenWords, wSet, maxWordLen, 0, maxChainLen);
-            //}
-            //return maxChainLen[0];
-
-            //dynamic progmming --------------------------------
-            //var dp = new Dictionary<string, int>();
-            //int longestChain = 0;
-            //// calculate dp1 based on dp for each i
-            //for (int i = 1; i <= maxWordLen; i++){
-            //    var dp1 = new Dictionary<string, int>();
-            //    if (lenWords[i].Count == 0){
-            //        // no-op
-            //    }else if (dp.Count == 0){
-            //        foreach (var w in lenWords[i]){
-            //            dp1[w] = 1;
-            //        }
-            //        longestChain = Math.Max(longestChain, 1);
-            //    }else{
-            //        foreach (var w in lenWords[i]){
-            //            foreach (var k in dp.Keys){
-            //                if (IsPre(k, w)){
-            //                    var oldVal = 0;
-            //                    if (dp1.ContainsKey(w)){
-            //                        oldVal = dp1[w];
-            //                    }
-            //                    dp1[w] = Math.Max(oldVal, dp[k] + 1);
-            //                }
-            //            }
-            //            if (!dp1.ContainsKey(w)){
-            //                dp1[w] = 1;
-            //            }
-            //        }
-            //        longestChain = Math.Max(longestChain, dp1.Values.Max());
-            //    }
-            //    dp = dp1;
-            //}
             return longestChain;
-        }
 
-        public static void Dfs(string parent, int index, Dictionary<int, List<string>> lenWords, Dictionary<string, int> wSet, int maxWordLen, int depth, int[] maxChainLen)
-        {
-            if (index > maxWordLen)
-            {
-                return;
-            }
-
-            if (lenWords[index] == null || lenWords[index].Count == 0)
-            {
-                Dfs("", index + 1, lenWords, wSet, maxWordLen, 0, maxChainLen);
-            }
-
-            foreach (var w in lenWords[index])
-            {
-                if (wSet.Keys.Contains(w) && wSet[w] >= depth + 1)
-                {
-                    return;
-                }
-
-                if (IsPre(parent, w))
-                {
-                    maxChainLen[0] = Math.Max(maxChainLen[0], depth + 1);
-                    wSet[w] = depth + 1;
-                    Dfs(w, index + 1, lenWords, wSet, maxWordLen, depth + 1, maxChainLen);
-                }
-                else
-                {
-                    maxChainLen[0] = Math.Max(maxChainLen[0], 1);
-                    wSet[w] = 1;
-                    Dfs(w, index + 1, lenWords, wSet, maxWordLen, 1, maxChainLen);
-                }
-            }
         }
 
         public static bool IsPre(string a, string b)
