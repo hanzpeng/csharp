@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using NUnit.Framework.Internal;
 
 namespace P1048
 {
-    class P1048_dfs
+    class P1048_bfs
     {
         [Test]
         public void test1()
@@ -28,7 +29,8 @@ namespace P1048
                     maxWordLen = w.Length;
             }
             var lenWords = new Dictionary<int, List<string>>();
-            for (int i = 1; i <= maxWordLen; i++)
+            int i;
+            for (i = 1; i <= maxWordLen; i++)
             {
                 lenWords[i] = new List<string>();
             }
@@ -39,15 +41,56 @@ namespace P1048
             ///////////////////////////////////////
             //this is the key point of the solution.
             ///////////////////////////////////////
-            //int longestChain = 0;
-            var dp = new Dictionary<string, int>();
-            int[] maxChainLen = new int[] { 0 };
-            for (int i = 1; i <= maxWordLen; i++)
-            {
-                Dfs("", 1, lenWords, dp, maxWordLen, 0, maxChainLen);
-            }
-            return maxChainLen[0];
+            var wSet = new Dictionary<string, int>();
 
+            //bfs --------------------------------
+            Queue<string> q = new Queue<string>();
+            int longestChain = 0;
+
+            for (int j = 1; j < maxWordLen; j++)
+            {
+                foreach (var w in lenWords[j])
+                {
+                    wSet[w] = 1;
+                    q.Enqueue(w);
+                }
+            }
+
+            while (q.Count > 0)
+            {
+                var current = q.Dequeue();
+                if (current.Length == maxWordLen)
+                {
+                    break;
+                }
+
+                foreach (var w in lenWords[current.Length + 1])
+                {
+                    int old = wSet.ContainsKey(w) ? wSet[w] : 0;
+                    if (IsPre(current, w))
+                    {
+                        wSet[w] = Math.Max(old, wSet[current] + 1);
+                    }
+                    else
+                    {
+                        wSet[w] = Math.Max(old, 1);
+                    }
+                    longestChain = Math.Max(longestChain, wSet[w]);
+                }
+
+            }
+            //dfs------------------------------------------ -
+            //var wSet = new Dictionary<string, int>();
+            //int[] maxChainLen = new int[] { 0 };
+            //for (int i = 1; i <= maxWordLen; i++)
+            //{
+            //    Dfs("", 1, lenWords, wSet, maxWordLen, 0, maxChainLen);
+            //}
+            //return maxChainLen[0];
+
+            //dynamic progmming --------------------------------
+            //var dp = new Dictionary<string, int>();
+            //int longestChain = 0;
             //// calculate dp1 based on dp for each i
             //for (int i = 1; i <= maxWordLen; i++){
             //    var dp1 = new Dictionary<string, int>();
@@ -77,7 +120,7 @@ namespace P1048
             //    }
             //    dp = dp1;
             //}
-            //return longestChain;
+            return longestChain;
         }
 
         public static void Dfs(string parent, int index, Dictionary<int, List<string>> lenWords, Dictionary<string, int> wSet, int maxWordLen, int depth, int[] maxChainLen)

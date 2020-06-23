@@ -39,16 +39,14 @@ namespace P1048
             ///////////////////////////////////////
             //this is the key point of the solution.
             ///////////////////////////////////////
-            //int longestChain = 0;
-            var dp = new Dictionary<string, int>();
+            var wSet = new Dictionary<string, int>();
             int[] maxChainLen = new int[] { 0 };
-            for (int i = 1; i <= maxWordLen; i++)
-            {
-                Dfs("", 1, lenWords, dp, maxWordLen, 0, maxChainLen);
-            }
+            Dfs("", 1, lenWords, wSet, maxWordLen, 0, maxChainLen);
             return maxChainLen[0];
 
             //// calculate dp1 based on dp for each i
+            //int longestChain = 0;
+            //var dp = new Dictionary<string, int>();
             //for (int i = 1; i <= maxWordLen; i++){
             //    var dp1 = new Dictionary<string, int>();
             //    if (lenWords[i].Count == 0){
