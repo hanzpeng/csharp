@@ -59,25 +59,21 @@ namespace P1048
             while (q.Count > 0)
             {
                 var current = q.Dequeue();
-                if (current.Length == maxWordLen)
+                if (current.Length <= maxWordLen)
                 {
-                    break;
-                }
-
-                foreach (var w in lenWords[current.Length + 1])
-                {
-                    int old = wSet.ContainsKey(w) ? wSet[w] : 0;
-                    if (IsPre(current, w))
+                    foreach (var child in lenWords[current.Length + 1])
                     {
-                        wSet[w] = Math.Max(old, wSet[current] + 1);
+                        if (IsPre(current, child))
+                        {
+                            wSet[child] = Math.Max(wSet[child], wSet[current] + 1);
+                        }
+                        else
+                        {
+                            wSet[child] = Math.Max(wSet[child], 1);
+                        }
+                        longestChain = Math.Max(longestChain, wSet[child]);
                     }
-                    else
-                    {
-                        wSet[w] = Math.Max(old, 1);
-                    }
-                    longestChain = Math.Max(longestChain, wSet[w]);
                 }
-
             }
             //dfs------------------------------------------ -
             //var wSet = new Dictionary<string, int>();
