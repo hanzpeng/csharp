@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 namespace NUnitProject1
@@ -30,6 +31,8 @@ namespace NUnitProject1
         Target = 9
 
         Output: True
+        3 + 6 = 9
+        2 + 7 = 9
 
 
         Example 2:
@@ -55,7 +58,7 @@ namespace NUnitProject1
             root.left.left = new TreeNode(2);
             root.left.right = new TreeNode(4);
             root.right.right = new TreeNode(7);
-            Assert.AreEqual(true, FindSum(root, 9));
+            Assert.AreEqual(true, FindSum1(root, 9));
         }
         [Test]
         public void Test2()
@@ -66,7 +69,7 @@ namespace NUnitProject1
             root.left.left = new TreeNode(2);
             root.left.right = new TreeNode(4);
             root.right.right = new TreeNode(7);
-            Assert.AreEqual(false, FindSum(root, 100));
+            Assert.AreEqual(false, FindSum1(root, 100));
         }
 
         public bool FindSum(TreeNode root, int target)
@@ -83,5 +86,37 @@ namespace NUnitProject1
             return FindSum(root.left, target, set) || FindSum(root.right, target, set); 
         }
 
+        public bool FindSum1(TreeNode root, int target)
+        {
+            var list = new List<int>();
+            InOrder(root, target, list);
+            if (!list.Any()) return false;
+            int left = 0;
+            int right = list.Count()-1;
+            while(right > left)
+            {
+                if(list[left] + list[right] < target)
+                {
+                    left++;
+                }
+                else if (list[left] + list[right] > target)
+                {
+                    right--;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void InOrder(TreeNode root, int target, List<int> list)
+        {
+            if (root == null) return;
+            InOrder(root.left, target, list);
+            list.Add(root.value);
+            InOrder(root.right, target, list);
+        }
     }
 }
