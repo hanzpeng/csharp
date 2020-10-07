@@ -45,6 +45,52 @@ Output: "a(b(c)d)"
             {
                 return s;
             }
+            var leftPara = new Stack<int>();
+            var indexToRemove = new HashSet<int>();
+            var sb = new StringBuilder();
+
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '(')
+                {
+                    leftPara.Push(i);
+                }
+                else if (s[i] == ')')
+                {
+                    if (leftPara.Count > 0)
+                    {
+                        leftPara.Pop();
+                    }
+                    else
+                    {
+                        indexToRemove.Add(i);
+                    }
+                }
+            }
+
+            while (leftPara.Count > 0)
+            {
+                indexToRemove.Add(leftPara.Pop());
+            }
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!indexToRemove.Contains(i))
+                {
+                    sb.Append(s[i]);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public string MinRemoveToMakeValid1(string s)
+        {
+            if (s == null || s.Length == 0)
+            {
+                return s;
+            }
             var l = new Stack<int>();
             var r = new Stack<int>();
             var sb = new StringBuilder(s);
@@ -73,22 +119,22 @@ Output: "a(b(c)d)"
             {
                 if (l.Peek() > r.Peek())
                 {
-                    sb.Remove(l.Pop(),1);
+                    sb.Remove(l.Pop(), 1);
                 }
                 else
                 {
-                    sb.Remove(r.Pop(),1);
+                    sb.Remove(r.Pop(), 1);
                 }
             }
 
             while (l.Count > 0)
             {
-                sb.Remove(l.Pop(),1);
+                sb.Remove(l.Pop(), 1);
             }
 
             while (r.Count > 0)
             {
-                sb.Remove(r.Pop(),1);
+                sb.Remove(r.Pop(), 1);
             }
 
             return sb.ToString();
